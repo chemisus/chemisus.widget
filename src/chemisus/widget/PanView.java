@@ -35,6 +35,14 @@ public class PanView
 
     public final int Y = 1;
 
+    public final int TOP = 0;
+
+    public final int BOTTOM = 1;
+
+    public final int LEFT = 2;
+
+    public final int RIGHT = 3;
+
     /*\**********************************************************************\*/
     /*\                             Static Fields                            \*/
     /*\**********************************************************************\*/
@@ -56,10 +64,94 @@ public class PanView
 
     private float [] touchTotal = new float[2];
 
+    private float [] minOffset = {0, 100};
+
+    private float [] maxOffset = {0, 100};
+
+    private boolean [] bounds = {true, true, true, true};
+
     /*\**********************************************************************\*/
     /*\                             Properties                               \*/
     /*\**********************************************************************\*/
+    public float getMinOffsetX()
+    {
+        return minOffset[X];
+    }
 
+    public float getMaxOffsetX()
+    {
+        return maxOffset[X];
+    }
+
+    public float getMinOffsetY()
+    {
+        return minOffset[Y];
+    }
+
+    public float getMaxOffsetY()
+    {
+        return maxOffset[Y];
+    }
+
+    public void setMinOffsetX(float value)
+    {
+        minOffset[X] = value;
+    }
+
+    public void setMaxOffsetX(float value)
+    {
+        maxOffset[X] = value;
+    }
+
+    public void setMinOffsetY(float value)
+    {
+        minOffset[Y] = value;
+    }
+
+    public void setMaxOffsetY(float value)
+    {
+        maxOffset[Y] = value;
+    }
+
+    public boolean getBoundTop()
+    {
+        return bounds[TOP];
+    }
+
+    public boolean getBoundBottom()
+    {
+        return bounds[BOTTOM];
+    }
+
+    public boolean getBoundLeft()
+    {
+        return bounds[LEFT];
+    }
+
+    public boolean getBoundRight()
+    {
+        return bounds[RIGHT];
+    }
+
+    public void setBoundTop(boolean value)
+    {
+        bounds[TOP] = value;
+    }
+
+    public void setBoundBottom(boolean value)
+    {
+        bounds[BOTTOM] = value;
+    }
+
+    public void setBoundLeft(boolean value)
+    {
+        bounds[LEFT] = value;
+    }
+
+    public void setBoundRight(boolean value)
+    {
+        bounds[RIGHT] = value;
+    }
 
     /*\**********************************************************************\*/
     /*\                             Constructors                             \*/
@@ -82,12 +174,39 @@ public class PanView
     /*\**********************************************************************\*/
     /*\                             Private Methods                          \*/
     /*\**********************************************************************\*/
+    public float adjustBoundX(float x)
+    {
+        if (getBoundLeft() && x < getMinOffsetX())
+        {
+            x = getMinOffsetX();
+        }
+        
+        if (getBoundRight() && x > getMaxOffsetX())
+        {
+            x = getMaxOffsetX();
+        }
 
+        return x;
+    }
+
+    public float adjustBoundY(float y)
+    {
+        if (getBoundTop() && y < getMinOffsetY())
+        {
+            y = getMinOffsetY();
+        }
+
+        if (getBoundBottom() && y > getMaxOffsetY())
+        {
+            y = getMaxOffsetY();
+        }
+
+        return y;
+    }
 
     /*\**********************************************************************\*/
     /*\                             Public Methods                           \*/
     /*\**********************************************************************\*/
-
 
     /*\**********************************************************************\*/
     /*\                             Callbacks                                \*/
@@ -116,11 +235,15 @@ public class PanView
 
             float y = touchLast[Y] - event.getRawY();
 
-            scrollBy((int)x, (int)y);
-
             touchTotal[X] += Math.abs(x);
 
             touchTotal[Y] += Math.abs(y);
+
+            x = adjustBoundX(getScrollX() + x);
+
+            y = adjustBoundY(getScrollY() + y);
+
+            scrollTo((int)x, (int)y);
         }
 
         touchLast[X] = event.getRawX();
