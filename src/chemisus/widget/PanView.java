@@ -29,7 +29,9 @@ public class PanView
     /*\**********************************************************************\*/
     /*\                             Constants                                \*/
     /*\**********************************************************************\*/
+    public final static int X = 0;
 
+    public final static int Y = 1;
 
     /*\**********************************************************************\*/
     /*\                             Static Fields                            \*/
@@ -93,16 +95,18 @@ public class PanView
     {
         gesture.onTouchEvent(event);
 
-        if (event.getAction() == MotionEvent.ACTION_UP && scrolled)
+        if (event.getAction() == MotionEvent.ACTION_UP && onUp(event))
         {
-            scrolled = false;
-
             return true;
         }
 
         super.dispatchTouchEvent(event);
 
         return true;
+    }
+
+    public void fling(float velocityX, float velocityY)
+    {
     }
 
     /*\**********************************************************************\*/
@@ -113,21 +117,33 @@ public class PanView
         return false;
     }
 
+    public boolean onUp(MotionEvent event)
+    {
+        if (scrolled)
+        {
+            scrolled = false;
+
+            return true;
+        }
+
+        return false;
+    }
+
     public boolean onSingleTapUp(MotionEvent event)
     {
         return false;
     }
 
-    public boolean onScroll(MotionEvent event1, MotionEvent event2, float x, float y)
+    public boolean onScroll(MotionEvent event1, MotionEvent event2, float distanceX, float distanceY)
     {
-        scrollBy((int)x, (int)y);
+        scrollBy((int)distanceX, (int)distanceY);
 
         scrolled = true;
 
         return false;
     }
 
-    public boolean onFling(MotionEvent event1, MotionEvent event2, float arg2, float arg3)
+    public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY)
     {
         return false;
     }
