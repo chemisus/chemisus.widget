@@ -50,9 +50,21 @@ public class PanView
 
     private boolean scrolled = false;
 
+    private int [] offset = new int[2];
+
     /*\**********************************************************************\*/
     /*\                             Properties                               \*/
     /*\**********************************************************************\*/
+    public int getOffsetLeft()
+    {
+        return offset[X];
+    }
+
+    public int getOffsetTop()
+    {
+        return offset[Y];
+    }
+
 
 
     /*\**********************************************************************\*/
@@ -82,9 +94,13 @@ public class PanView
     /*\**********************************************************************\*/
     /*\                             Private Methods                          \*/
     /*\**********************************************************************\*/
-    protected void setup()
+    private void setup()
     {
         gesture = new GestureDetector(this);
+    }
+
+    private void scrolled(int x, int y)
+    {
     }
 
     /*\**********************************************************************\*/
@@ -136,7 +152,11 @@ public class PanView
 
     public boolean onScroll(MotionEvent event1, MotionEvent event2, float distanceX, float distanceY)
     {
-        scrollBy((int)distanceX, (int)distanceY);
+        offset[X] += (int)distanceX;
+
+        offset[Y] += (int)distanceY;
+
+        scrollTo(offset[X], offset[Y]);
 
         scrolled = true;
 
